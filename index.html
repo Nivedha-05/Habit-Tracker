@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker - Build Better Habits</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1 class="title">Habit Tracker</h1>
+            <p class="subtitle">Build better habits, one day at a time</p>
+        </header>
+
+        <!-- Daily Tab Content -->
+        <div class="tab-content active" id="daily-tab">
+        <!-- Tab Navigation -->
+        <div class="tab-container">
+            <div class="tab-buttons">
+              
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <section class="progress-section">
+            <div class="progress-card">
+                <svg class="progress-circle" viewBox="0 0 120 120">
+                    <!-- Background circle -->
+                    <circle cx="60" cy="60" r="54" class="progress-background" />
+                    <!-- Progress circle (animated) -->
+                    <circle cx="60" cy="60" r="54" class="progress-bar" />
+                </svg>
+                <div class="progress-text">
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                    <span class="progress-label">Complete</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Habit Section -->
+        <section class="add-habit-section">
+            <div class="add-habit-card">
+                <h2 class="section-title">Add New Habit</h2>
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="habitInput" 
+                        class="habit-input" 
+                        placeholder="Enter habit name (e.g., Morning Meditation)"
+                        maxlength="50"
+                    >
+                    <select id="tagSelect" class="tag-select">
+                        <option value="Health">Health</option>
+                        <option value="Study">Study</option>
+                        <option value="Fitness">Fitness</option>
+                        <option value="Personal">Personal</option>
+                    </select>
+                    <select id="prioritySelect" class="priority-select">
+                        <option value="Low">Low Priority</option>
+                        <option value="Medium" selected>Medium Priority</option>
+                        <option value="High">High Priority</option>
+                    </select>
+                    <select id="reminderSelect" class="reminder-select">
+                        <option value="Morning">Morning</option>
+                        <option value="Afternoon">Afternoon</option>
+                        <option value="Evening" selected>Evening</option>
+                        <option value="Night">Night</option>
+                    </select>
+                </div>
+                <textarea 
+                    id="habitNotes" 
+                    class="habit-notes" 
+                    placeholder="Add notes/details (e.g., Drink 2L before 6pm)"
+                    maxlength="150"
+                    rows="2"
+                ></textarea>
+                <button id="addBtn" class="add-btn">Add Habit</button>
+            </div>
+        </section>
+
+        <!-- Habits List Section -->
+        <section class="habits-section">
+            <h2 class="section-title">Your Habits</h2>
+            <div class="habits-list" id="habitsList">
+                <!-- Habits will be rendered here by JavaScript -->
+                <div class="empty-state">
+                    <p>No habits yet. Add one to get started! 🚀</p>
+                </div>
+            </div>
+        </section>
+        </div><!-- End Daily Tab -->
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
