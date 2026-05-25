@@ -164,7 +164,7 @@ function handleToggleHabit(habitId) {
  * @param {Object} habit - The habit object
  */
 function updateHabitStreak(habit) {
-    const today = new Date().toLocaleDateString();
+    const today = getDateString(new Date());
     
     if (!habit.lastCompletedDate) {
         // First time completing this habit
@@ -175,19 +175,41 @@ function updateHabitStreak(habit) {
         return;
     } else {
         // Check if completed yesterday
-        const lastDate = new Date(habit.lastCompletedDate);
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayString = getDateString(yesterday);
         
-        if (lastDate.toLocaleDateString() === yesterday.toLocaleDateString()) {
+        if (habit.lastCompletedDate === yesterdayString) {
             // Consecutive day, increment streak
             habit.streak++;
+            habit.lastCompletedDate = today;
         } else {
-            // Not consecutive, reset streak
+            // Not consecutive, reset streak to 1
             habit.streak = 1;
+            habit.lastCompletedDate = today;
         }
-        habit.lastCompletedDate = today;
     }
+}
+
+/**
+ * Helper function to get consistent date string (YYYY-MM-DD)
+ * @param {Date} date - The date object
+ * @returns {string} - Date in YYYY-MM-DD format
+ */
+function getDateString(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+/**
+ * Helper function to parse date string
+ * @param {string} dateString - Date in YYYY-MM-DD format
+ * @returns {Date} - Date object
+ */
+function parseDate(dateString) {
+    return new Date(dateString + 'T00:00:00');
 }
 
 /**
