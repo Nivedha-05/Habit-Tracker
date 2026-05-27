@@ -166,29 +166,42 @@ function handleToggleHabit(habitId) {
 function updateHabitStreak(habit) {
     const today = getDateString(new Date());
     
+    console.log(`[STREAK DEBUG] Habit: ${habit.name}`);
+    console.log(`[STREAK DEBUG] Today: ${today}`);
+    console.log(`[STREAK DEBUG] Last completed: ${habit.lastCompletedDate}`);
+    console.log(`[STREAK DEBUG] Current streak: ${habit.streak}`);
+    
     if (!habit.lastCompletedDate) {
         // First time completing this habit
         habit.streak = 1;
         habit.lastCompletedDate = today;
+        console.log(`[STREAK DEBUG] First completion - streak set to 1`);
     } else if (habit.lastCompletedDate === today) {
         // Already completed today, don't increment
+        console.log(`[STREAK DEBUG] Already completed today - no change`);
         return;
     } else {
-        // Check if completed yesterday
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayString = getDateString(yesterday);
+        // Calculate the difference in days using timezone-safe method
+        const lastDate = parseDate(habit.lastCompletedDate);
+        const todayDate = parseDate(today);
         
-        if (habit.lastCompletedDate === yesterdayString) {
+        // Get difference in days
+        const dayDifference = Math.floor((todayDate - lastDate) / (1000 * 60 * 60 * 24));
+        console.log(`[STREAK DEBUG] Day difference: ${dayDifference}`);
+        
+        if (dayDifference === 1) {
             // Consecutive day, increment streak
             habit.streak++;
             habit.lastCompletedDate = today;
+            console.log(`[STREAK DEBUG] Consecutive day - streak incremented to ${habit.streak}`);
         } else {
-            // Not consecutive, reset streak to 1
+            // Not consecutive (missed day or completed in future), reset streak to 1
             habit.streak = 1;
             habit.lastCompletedDate = today;
+            console.log(`[STREAK DEBUG] Non-consecutive day - streak reset to 1`);
         }
     }
+    console.log(`[STREAK DEBUG] Final streak: ${habit.streak}`);
 }
 
 /**
@@ -206,10 +219,13 @@ function getDateString(date) {
 /**
  * Helper function to parse date string
  * @param {string} dateString - Date in YYYY-MM-DD format
- * @returns {Date} - Date object
+ * @returns {Date} - Date object at midnight in local timezone
  */
 function parseDate(dateString) {
-    return new Date(dateString + 'T00:00:00');
+    // Split the date string to avoid timezone issues
+    const [year, month, day] = dateString.split('-');
+    // Create date at midnight in local timezone
+    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
 }
 
 /**
@@ -236,7 +252,7 @@ function handleDeleteHabit(habitId) {
  * - Update last reset date
  */
 function resetHabitsIfNewDay() {
-    const today = new Date().toLocaleDateString();
+    const today = getDateString(new Date());
     const lastResetDate = localStorage.getItem(LAST_RESET_KEY);
     
     // If today is different from last reset date, reset all habits
