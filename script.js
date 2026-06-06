@@ -248,7 +248,7 @@ function handleDeleteHabit(habitId) {
  * Reset habits daily at midnight
  * - Check if date has changed since last reset
  * - Reset all completed statuses to false
- * - Keep streak data intact
+ * - Break streaks if habit wasn't completed yesterday
  * - Update last reset date
  */
 function resetHabitsIfNewDay() {
@@ -257,8 +257,21 @@ function resetHabitsIfNewDay() {
     
     // If today is different from last reset date, reset all habits
     if (lastResetDate !== today) {
+        // Calculate yesterday's date
+        const todayDate = new Date();
+        const yesterdayDate = new Date(todayDate);
+        yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+        const yesterday = getDateString(yesterdayDate);
+        
         habits.forEach(habit => {
+            // Reset completed status
             habit.completed = false;
+            
+            // Break streak if habit wasn't completed yesterday
+            if (habit.lastCompletedDate && habit.lastCompletedDate !== yesterday) {
+                // Streak is broken - reset to 0
+                habit.streak = 0;
+            }
         });
         
         // Save the reset
